@@ -1,108 +1,77 @@
-function createHTMLElement(tag, text) {
-    const element = document.createElement(tag);
-    // if (text, id) {
-    //     element.innerText = text;
-    //     element.id = id;
-    // };
-    element.innerText = text;
-
-    return element;
+function currency(price) {
+    return Math.floor(price).toLocaleString('ru-RU') + ' ₽';
 };
 
-let header = createHTMLElement('header', 'Просто текст', 'header');
-let headerContainerCard = createHTMLElement('div');
-
-
-// // Подключение 
-
-// document.body.append(header);
-
-// header.appendChild(headerContainerCard);
-
-// // Атибуты, стили 
-
-// header.setAttribute('style', 'background: red');
-
-function number(number) {
-    return Math.floor(number).toLocaleString('ru-RU') + ' руб.';
+function change(price) {
+    return Math.floor(price).toLocaleString('en-US') + ' $';
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Массив 
-    const products = [
-        {
-            photo: '../img/1.png', 
-            price: 2000,
-            width: 200,
-            height: 150,
-            name: 'Пустыня',
-            addButton: 'Добавить товар',
-            removeButton: 'Убрать товар'
-        },
-        {
-            photo: '../img/2.jpg',
-            price: 2000,
-            width: 200,
-            height: 150,
-            name: 'Море',
-            addButton: 'Добавить товар',
-            removeButton: 'Убрать товар'
-        }
-    ];
+    fetch('./json/header.json')
+    .then(res => res.json())
+    .then(function (data) {
+        const cards = data.cards;
 
-    // Переменные
-    const containerCard = document.querySelector('.container-card');
-    const templateCard = document.querySelector('.card-template');
-
-    templateCard.style.display = 'none';
-
-    // Цикл 
-    products.forEach(function(product) {
-        const clone = templateCard.content.cloneNode(true); 
-
-        // Значения
-        const imgProduct = clone.querySelector('.card__img'); 
-        imgProduct.src = product.photo; 
-        imgProduct.alt = product.name;
-        imgProduct.width = product.width;
-        imgProduct.height = product.height;
-
-        const nameProduct = clone.querySelector('.card__name');
-        nameProduct.textContent = product.name;
-
-        const priceProduct = clone.querySelector('.card__price');
-        priceProduct.textContent = number(`${product.price}`);
-
-        const addButton = clone.querySelector('.card__add-button'); 
-        addButton.textContent = product.addButton;
-
-        // Добавление клонированной карточки в контейнер
-        containerCard.appendChild(clone);
-    });
+        let container = document.querySelector('.container-card');
 
 
-    containerCard.addEventListener('click', function(event){
-        if (event.target.matches('.card__add-button')) {
-            const card = event.target.closest('.product-card'); 
-    
-            console.log('товар добавлен');
-        }
-    });
+        cards.forEach(function (card) {
+            let wrapperCard = document.createElement('div');
+            wrapperCard.setAttribute('class', 'wrapper-card');
+
+            let imgProduct = document.createElement('img'); 
+            imgProduct.setAttribute('src', card.image);
+            imgProduct.setAttribute('width', card.width);
+            imgProduct.setAttribute('height', card.height);
+
+            let nameProduct = document.createElement('h2');
+            nameProduct.setAttribute('class', 'product-name');
+            nameProduct.textContent = card.name;
+
+            let priceProduct = document.createElement('p');
+            priceProduct.setAttribute('class', 'product-price');
+            priceProduct.textContent = currency(card.priceRu);
+
+
+            let btnProduct = document.createElement('button');
+            btnProduct.setAttribute('class', 'product-button-add');
+            btnProduct.textContent = "Добавить в корзину";
+
+            let changeСurrency = document.createElement('button');
+            changeСurrency.setAttribute('class', 'btn-change');
+            changeСurrency.textContent = 'En';
+
+            changeСurrency.addEventListener('click', function () {
+                if (changeСurrency.textContent === 'Ru') {
+                    changeСurrency.textContent = 'En'; 
+                    priceProduct.textContent = currency(card.priceRu); 
+                } else {
+                    changeСurrency.textContent = 'Ru'; 
+                    priceProduct.textContent = change(card.priceEn); 
+                }
+            });
+
+
+            container.appendChild(wrapperCard);
+
+            wrapperCard.appendChild(imgProduct);
+            wrapperCard.appendChild(nameProduct);
+            wrapperCard.appendChild(priceProduct);
+            wrapperCard.appendChild(btnProduct);
+            wrapperCard.appendChild(changeСurrency);
+        });
+
+        container.addEventListener('click', function(event) {
+            if (event.target.matches('.product-button-add')) {
+                const wrapperCard = event.target.closest('.wrapper-card');
+
+                const nameProduct = wrapperCard.querySelector('.product-name').textContent;
+                const priceProduct = wrapperCard.querySelector('.product-price').textContent;
+
+                console.log(`Товар добавлен в корзину: ${nameProduct} (${priceProduct})`);
+            }
+        });
+    })
+    .catch((error) => console.log(error))
 });
-
-// Корзина 
-
-let cart = document.createElement('div');
-cart.setAttribute('class', 'cart');
-
-let cartTitle = createHTMLElement('h2', 'Корзина');
-cartTitle.setAttribute('class', 'cart__title');
-
-// Подключение 
-
-document.body.appendChild(cart);
-
-cart.appendChild(cartTitle);
-
-
 

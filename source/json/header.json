@@ -1,0 +1,28 @@
+{
+    "cards": [
+        {
+            "image": "../img/1.png",
+            "width": "250",
+            "height": "150",
+            "name": "Пустыня",
+            "priceRu": 2000,
+            "priceEn": 20
+        },
+        {
+            "image": "../img/2.jpg",
+            "width": "250",
+            "height": "150",
+            "name": "Море",
+            "priceRu": 2000,
+            "priceEn": 20
+        },
+        {
+            "image": "../img/1.png",
+            "width": "250",
+            "height": "150",
+            "name": "Пустыня",
+            "priceRu": 2000,
+            "priceEn": 20
+        }
+    ]
+}
