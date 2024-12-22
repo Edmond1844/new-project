@@ -3,8 +3,13 @@ function currency(price) {
 };
 
 function change(price) {
-    return Math.floor(price).toLocaleString('en-US') + ' $';
-}
+    return Math.floor(price).toLocaleString('en-US') + ' $'; 
+};
+
+function calculationRu(price) {
+    const check = price * 97; 
+    return check;
+};
 
 document.addEventListener('DOMContentLoaded', () => {
     fetch('./json/header.json')
@@ -13,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const cards = data.cards;
 
         let container = document.querySelector('.container-card');
-
 
         cards.forEach(function (card) {
             let wrapperCard = document.createElement('div');
@@ -30,35 +34,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let priceProduct = document.createElement('p');
             priceProduct.setAttribute('class', 'product-price');
-            priceProduct.textContent = currency(card.priceRu);
-
+            priceProduct.textContent = currency(calculationRu(card.price));
 
             let btnProduct = document.createElement('button');
             btnProduct.setAttribute('class', 'product-button-add');
             btnProduct.textContent = "Добавить в корзину";
 
-            let changeСurrency = document.createElement('button');
-            changeСurrency.setAttribute('class', 'btn-change');
-            changeСurrency.textContent = 'En';
-
-            changeСurrency.addEventListener('click', function () {
-                if (changeСurrency.textContent === 'Ru') {
-                    changeСurrency.textContent = 'En'; 
-                    priceProduct.textContent = currency(card.priceRu); 
+            let changeCurrency = document.createElement('button');
+            changeCurrency.setAttribute('class', 'btn-change');
+            changeCurrency.textContent = 'En'; 
+            changeCurrency.addEventListener('click', function () {
+                if (changeCurrency.textContent === 'Ru') {
+                    changeCurrency.textContent = 'En'; 
+                    priceProduct.textContent = currency(calculationRu(card.price));
                 } else {
-                    changeСurrency.textContent = 'Ru'; 
-                    priceProduct.textContent = change(card.priceEn); 
+                    changeCurrency.textContent = 'Ru'; 
+                    priceProduct.textContent = change(card.price);
                 }
             });
 
-
             container.appendChild(wrapperCard);
-
             wrapperCard.appendChild(imgProduct);
             wrapperCard.appendChild(nameProduct);
             wrapperCard.appendChild(priceProduct);
             wrapperCard.appendChild(btnProduct);
-            wrapperCard.appendChild(changeСurrency);
+            wrapperCard.appendChild(changeCurrency);
         });
 
         container.addEventListener('click', function(event) {
@@ -72,6 +72,5 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     })
-    .catch((error) => console.log(error))
+    .catch((error) => console.log(error));
 });
-
